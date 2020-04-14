@@ -66,13 +66,15 @@ export const variableType: Type = {
 function generateFunctionType(
   parameterTypes: Type[],
   returnType: Type,
-  isPolymorphic: boolean = false
+  isPolymorphic: boolean = false,
+  hasVarArgs: boolean = false
 ) {
   const functionType: Type = {
     kind: 'function',
     parameterTypes,
     returnType,
-    isPolymorphic
+    isPolymorphic,
+    hasVarArgs
   }
   return functionType
 }
@@ -101,8 +103,7 @@ primitiveMap.set('&&', {
   types: [generateFunctionType([booleanType, variableType], variableType, true)]
 })
 primitiveMap.set('||', {
-  types: [generateFunctionType([booleanType, variableType], variableType, true)],
-  isPolymorphic: false
+  types: [generateFunctionType([booleanType, variableType], variableType, true)]
 })
 primitiveMap.set('!', {
   types: [generateFunctionType([booleanType], booleanType)]
@@ -143,22 +144,13 @@ primitiveMap.set('<=', {
   types: [generateFunctionType([newAddableType, newAddableType], booleanType, true)]
 })
 
-// primitiveMap.set('display', {
-//   types: [
-//     // { argumentTypes: [numberType], resultType: undefined },
-//     // { argumentTypes: [stringType], resultType: undefined }
-//     generateFunctionType([variableType], null)  // Todo: Multiple params accepted?
-//   ],
-//   isPolymorphic: true
-// })
-// primitiveMap.set('error', {
-//   types: [
-//     // { argumentTypes: [numberType], resultType: undefined },
-//     // { argumentTypes: [stringType], resultType: undefined }
-//     generateFunctionType([variableType], null)  // Todo: Multiple params accepted?
-//   ],
-//   isPolymorphic: true
-// })
+primitiveMap.set('display', {
+  types: [generateFunctionType([variableType], variableType, true, true)]
+})
+
+primitiveMap.set('error', {
+  types: [generateFunctionType([variableType], variableType, true, true)]
+})
 
 primitiveMap.set('Infinity', {
   types: [numberType]
@@ -230,11 +222,9 @@ primitiveMap.set('math_floor', {
 primitiveMap.set('math_fround', {
   types: [generateFunctionType([numberType], numberType)]
 })
-// primitiveMap.set('math_hypot', {
-// types: [{ argumentTypes: [numberType], resultType: undefined }],
-//   types: [generateFunctionType([variableType], numberType)],  // Todo: Multiple params accepted?
-//   isPolymorphic: true
-// })
+primitiveMap.set('math_hypot', {
+  types: [generateFunctionType([numberType], numberType), false, true]
+})
 primitiveMap.set('math_imul', {
   types: [generateFunctionType([numberType, numberType], numberType)]
 })
@@ -262,22 +252,12 @@ primitiveMap.set('math_log10', {
 primitiveMap.set('math_LOG10E', {
   types: [numberType]
 })
-// primitiveMap.set('math_max', {
-//   // types: [
-//   //   { argumentTypes: [numberType], resultType: undefined },
-//   //   { argumentTypes: [stringType], resultType: undefined }
-//   // ],
-//   types: [generateFunctionType([variableType], numberType)],  // Todo: Multiple params accepted?
-//   isPolymorphic: true
-// })
-// primitiveMap.set('math_min', {
-//   // types: [
-//   //   { argumentTypes: [numberType], resultType: undefined },
-//   //   { argumentTypes: [stringType], resultType: undefined }
-//   // ],
-//   types: [generateFunctionType([variableType], numberType)],  // Todo: Multiple params accepted?
-//   isPolymorphic: true
-// })
+primitiveMap.set('math_max', {
+  types: [generateFunctionType([variableType], numberType, false, true)]
+})
+primitiveMap.set('math_min', {
+  types: [generateFunctionType([variableType], numberType, false, true)]
+})
 primitiveMap.set('math_PI', {
   types: [numberType]
 })
